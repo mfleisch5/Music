@@ -1,29 +1,22 @@
+# Music Editor.java
 
 
-README
+Welcome to Music Editor! Here are a few answers to your questions.
 
-
-What a design I have made! Am I right? You're probably thinking "What is this? How do I even start
-grading this?" Well, here are a few answers to your questions.
-
-I started by thinking about which classes we would need. Clearly we needed a Note class. Notes must
-have a pitch and an octave as stated by the homework. An octave is just a number, so I made it an
-int. A pitch has to be a very specific 'thing' so I made it an enum. I then gave pitches numbers and
-numbered notes from 0 to 119 because it made things much easier.
+Notes must have a pitch and an octave. A pitch has to be a very specific value, so I made it an enum. I then gave pitches numbers and numbered notes from 0 to 119.
 
 Next we have measures. This was very integral to my design. I decided that pieces of music are just
-certain notes, and their list of beats. Notes, at any given time, are either a Head, A sustain,
+certain notes, and their list of beats. Notes, at any given time, are either a Head, A Sustain,
 or they are Rest (which I turned into an enum called BeatType), their volume, their instrument,
 and the time in which they start and end.
 
-So, on to the MusicEditorModel. I start with four fields: The piece, which is just a list of
-measures, the number of rows in the piece, and the highest and lowest note. This is because these
+##Model
+I start with four fields: The piece, which is just a list of measures, the number of rows in the piece, and the highest and lowest note. This is because these
 four fields were the most manipulated and it was easier to call them. So, in order to manipulate
 pieces, we have readjust, addNote, edit, remove, and move.
 
-I wanted to make adding notes as easy as possible, so I make users say the specific note, the time
-they want the note to start, and its duration. Notes can write over other notes, which I realized
-is an actual good idea because that is how I would want to write pieces or edit music.
+I wanted to make adding notes as easy as possible, so users can input a specific note, the time
+they want the note to start, and its duration. (Notes can write over other notes)
 
 Next we have edit, remove, and move. These were pretty easy to make, and they took in an actual
 beat number (I count the number of beats in the measure) to make things more easy for the user.
@@ -31,9 +24,26 @@ beat number (I count the number of beats in the measure) to make things more eas
 Next we have our static methods, and a few others which I write about in the Javadoc comments. So
 in conclusion, have fun, I hope you understand why I did what I did, and thank you for reading me.
 
+## Controller
+1. Clicking a note and pressing R removes the note.
+2. Clicking a note and pressing S makes a note shorter.
+3. Clicking a note and pressing L makes a note longer.
+4. Clicking a note and pressing any of the arrows moves the note.
+5. Clicking anywhere on the piece and pressing A creates a new notehead.
+5. Pressing "esc" moves the view to the end.
+6. Pressing "control" moves the view to the beginning.
+7. Pressing T creates a new row of higher pitches
+8. Pressing G creates a new row of lower pitches
+9. Pressing P pauses/plays the music.
+10. Pressing 1 moves the current time back a note.
+11. Pressing 3 moves the current time forward a note.
+12. Pressing Q creates a new start repeat.
+13. Pressing Z creates a new play repeat.
+15. Clicking on a note and pressing I increases the instrument number.
+16. Clicking on a note and pressing K decreases the instrument number.
 
 
-UPDATE (Second Homework)
+###Note: UPDATE
 
 
 We decided to change a Beat from an enum to a Class with a BeatType enum, a Volume, and
@@ -57,29 +67,11 @@ that for yourself!
 
 - Michael and Sarah
 
-UPDATE 2 (Third Homework)
+### Note: UPDATE 2
 
 We now have a controller class which relates the keyboardhandler and mousehandler to the different
 views. It has a method called putKeys() which creates the runnables and assigns them to different
 keys. We also have a method called readjustView() which readjusts the view according to the new
 model.
-
-The controller:
-1. Clicking a note and pressing R removes the note.
-2. Clicking a note and pressing S makes a note shorter.
-3. Clicking a note and pressing L makes a note longer.
-4. Clicking a note and pressing any of the arrows moves the note.
-5. Clicking anywhere on the piece and pressing A creates a new notehead.
-5. Pressing "esc" moves the view to the end.
-6. Pressing "control" moves the view to the beginning.
-7. Pressing T creates a new row of higher pitches
-8. Pressing G creates a new row of lower pitches
-9. Pressing P pauses/plays the music.
-10. Pressing 1 moves the current time back a note.
-11. Pressing 3 moves the current time forward a note.
-12. Pressing Q creates a new start repeat.
-13. Pressing Z creates a new play repeat.
-15. Clicking on a note and pressing I increases the instrument number.
-16. Clicking on a note and pressing K decreases the instrument number.
 
 We also updated the ConcreteGuiViewPanel to include a red line that moves as the song is playing.
