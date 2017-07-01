@@ -5,22 +5,20 @@ Welcome to Music Editor! Here are a few answers to your questions.
 
 Notes must have a pitch (int) and an octave (enum). Pitches have corresponding numbered notes from 0 to 119.
 
-Next we have measures. This was very integral to my design. I decided that pieces of music are just
-certain notes, and their list of beats. Notes, at any given time, are either a Head, A Sustain,
+Next we have measures. Pieces of music are just certain notes and their list of beats. Notes, at any given time, are either a Head, A Sustain,
 or they are Rest (an enum called BeatType), their volume, their instrument, and the time in which they start and end.
 
 ## Model
-I start with four fields: The piece, which is just a list of measures, the number of rows in the piece, and the highest and lowest note. This is because these
-four fields were the most manipulated and it was easier to call them. So, in order to manipulate
+I start with four fields: The piece, which is just a list of measures, the number of rows in the piece, and the highest and lowest note. So, in order to manipulate
 pieces, we have readjust, addNote, edit, remove, and move.
 
 I wanted to make adding notes as easy as possible, so users can input a specific note, the time
 they want the note to start, and its duration. (Notes can write over other notes)
 
-Next we have edit, remove, and move. These were pretty easy to make, and they took in an actual
-beat number (I count the number of beats in the measure) to make things more easy for the user.
+Next we have edit, remove, and move. These take in an actual
+beat number (number of beats in the measure are counted) to make things more easy for the user.
 
-Next we have our static methods, and a few others which I write about in the Javadoc comments.
+Next we have our static methods, and a few others which are in the Javadoc comments.
 
 ## Controller
 1. Clicking a note and pressing R removes the note.
