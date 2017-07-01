@@ -3,14 +3,13 @@
 
 Welcome to Music Editor! Here are a few answers to your questions.
 
-Notes must have a pitch and an octave. A pitch has to be a very specific value, so I made it an enum. I then gave pitches numbers and numbered notes from 0 to 119.
+Notes must have a pitch (int) and an octave (enum). Pitches have corresponding numbered notes from 0 to 119.
 
 Next we have measures. This was very integral to my design. I decided that pieces of music are just
 certain notes, and their list of beats. Notes, at any given time, are either a Head, A Sustain,
-or they are Rest (which I turned into an enum called BeatType), their volume, their instrument,
-and the time in which they start and end.
+or they are Rest (an enum called BeatType), their volume, their instrument, and the time in which they start and end.
 
-##Model
+## Model
 I start with four fields: The piece, which is just a list of measures, the number of rows in the piece, and the highest and lowest note. This is because these
 four fields were the most manipulated and it was easier to call them. So, in order to manipulate
 pieces, we have readjust, addNote, edit, remove, and move.
@@ -21,8 +20,7 @@ they want the note to start, and its duration. (Notes can write over other notes
 Next we have edit, remove, and move. These were pretty easy to make, and they took in an actual
 beat number (I count the number of beats in the measure) to make things more easy for the user.
 
-Next we have our static methods, and a few others which I write about in the Javadoc comments. So
-in conclusion, have fun, I hope you understand why I did what I did, and thank you for reading me.
+Next we have our static methods, and a few others which I write about in the Javadoc comments.
 
 ## Controller
 1. Clicking a note and pressing R removes the note.
@@ -43,7 +41,7 @@ in conclusion, have fun, I hope you understand why I did what I did, and thank y
 16. Clicking on a note and pressing K decreases the instrument number.
 
 
-###Note: UPDATE
+### Note: UPDATE
 
 
 We decided to change a Beat from an enum to a Class with a BeatType enum, a Volume, and
