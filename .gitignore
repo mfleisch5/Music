@@ -1,6 +1,3 @@
 .idea/
-jar/
-test/
-Music Editor.iml
-src/META-INF/MANIFEST.MF
-out/
+Music.iml
+.DS_Store
