@@ -240,11 +240,6 @@ public class MidiViewImpl implements MidiView {
         if ((beat * tempo) < start) {
           continue;
         }
-        if(beat <= 77 && measure.getBeatEnd(i) >= 77) {
-          System.out.println("Beat on 77");
-          System.out.println(measure.getBeats().get(beat).getInstrument());
-          System.out.println(measure.getBeats().get(beat).getVolume());
-        }
         receiver.send(new ShortMessage(ShortMessage.NOTE_ON,
                         measure.getBeats().get(beat).getInstrument(),
                         measure.getNote().toInt(),

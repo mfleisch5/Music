@@ -56,7 +56,6 @@ public class Controller {
     });
     keyPressedMap.put(65, () -> {
       model.addNote(measure.getNote(), 1, mouse.getPos().x, 0, 64);
-      System.out.println(model.getMusicState());
     });
     keyPressedMap.put(73, () -> {
       measure.changeBeatInstrument(measure.hashBeat().get(mouse.getPos().x), 1);
