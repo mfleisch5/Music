@@ -1,23 +1,11 @@
 package music.controller;
 
+import music.model.*;
+import music.util.CompositionBuilder;
+import music.view.*;
+
 import java.awt.event.KeyListener;
 import java.util.HashMap;
-
-import music.model.Direction;
-import music.model.IMeasure;
-import music.model.IMusicEditorModel;
-import music.model.Measure;
-import music.model.Note;
-import music.model.RepeatType;
-import music.util.CompositionBuilder;
-import music.view.ConsoleViewImpl;
-import music.view.GuiView;
-import music.view.GuiViewImpl;
-import music.view.MidiView;
-import music.view.MidiViewImpl;
-import music.view.MusicViewImpl;
-import music.view.PlayableView;
-import music.view.View;
 
 /**
  * Created by michaelfleischmann on 11/14/16.
@@ -67,7 +55,8 @@ public class Controller {
       model.edit(measure.getNote(), measure.hashBeat().get(mouse.getPos().x), 1);
     });
     keyPressedMap.put(65, () -> {
-      model.addNote(measure.getNote(), 1, mouse.getPos().x);
+      model.addNote(measure.getNote(), 1, mouse.getPos().x, 0, 64);
+      System.out.println(model.getMusicState());
     });
     keyPressedMap.put(73, () -> {
       measure.changeBeatInstrument(measure.hashBeat().get(mouse.getPos().x), 1);

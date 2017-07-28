@@ -1,26 +1,15 @@
 package music.view;
 
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiMessage;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Synthesizer;
-import javax.swing.*;
-
 import music.model.IMeasure;
 import music.model.ModelViewer;
 import music.model.RepeatType;
+
+import javax.sound.midi.*;
+import javax.swing.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
+import java.util.*;
+import java.util.Timer;
 
 
 public class MidiViewImpl implements MidiView {
@@ -162,10 +151,6 @@ public class MidiViewImpl implements MidiView {
   }
 
   /**
-   * Plays alternate endings for the piece.
-   */
-
-  /**
    * It's go time! Creates a new timer and runs the repeats and the time instantiator once every
    * millisecond.
    */
@@ -254,6 +239,11 @@ public class MidiViewImpl implements MidiView {
         int beat = measure.findBeat(i);
         if ((beat * tempo) < start) {
           continue;
+        }
+        if(beat <= 77 && measure.getBeatEnd(i) >= 77) {
+          System.out.println("Beat on 77");
+          System.out.println(measure.getBeats().get(beat).getInstrument());
+          System.out.println(measure.getBeats().get(beat).getVolume());
         }
         receiver.send(new ShortMessage(ShortMessage.NOTE_ON,
                         measure.getBeats().get(beat).getInstrument(),
