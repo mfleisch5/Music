@@ -56,7 +56,7 @@ public class MusicEditorCreator {
       throw new IllegalArgumentException("No Null Models!");
     }
     int model1rows;
-    if (model1.getPiece().size() == 0) {
+    if (model1.getPiece().isEmpty()) {
       model1rows = 0;
     } else {
       model1rows = model1.getPiece().firstEntry().getValue().getBeats().size();

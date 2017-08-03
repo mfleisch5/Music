@@ -2,7 +2,6 @@ package music.view;
 
 
 import music.model.*;
-
 import javax.swing.*;
 import java.awt.*;
 

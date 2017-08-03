@@ -54,7 +54,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public String getMusicState() {
-    if (piece.size() == 0) {
+    if (piece.isEmpty()) {
       return "";
     }
     String result = getNoteState();
@@ -89,7 +89,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    */
   private void findNumRows() {
     int rows = 0;
-    if (piece.size() == 0) {
+    if (piece.isEmpty()) {
       numrows = 0;
       return;
     }
@@ -116,7 +116,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
         measure.getBeats().remove(measure.getBeats().size() - 1);
       }
     }
-    if (piece.size() == 0) {
+    if (piece.isEmpty()) {
       return;
     }
     IMeasure last = piece.lastEntry().getValue();
@@ -157,22 +157,17 @@ public final class MusicEditorModel implements IMusicEditorModel {
       throw new IllegalArgumentException("Invalid Note Addition");
     }
     int sustain = time + duration;
-    if (piece.size() == 0) {
+    if (piece.isEmpty()) {
       piece.put(note, (new Measure(note)));
     }
-    if (note.toInt() < piece.firstKey().toInt()) {
-      int firstKey = piece.firstKey().toInt();
-      for (int i = note.toInt(); i < firstKey; i++) {
-        piece.put(Note.intToNote(i), Measure.newOffMeasure(Note.intToNote(i), numrows));
-      }
+    int firstKey = piece.firstKey().toInt();
+    int lastKey = piece.lastKey().toInt();
+    for (int i = note.toInt(); i < firstKey; i++) {
+      piece.put(Note.intToNote(i), Measure.newOffMeasure(Note.intToNote(i), numrows));
     }
-    if (note.toInt() > piece.lastKey().toInt()) {
-      int lastKey = piece.lastKey().toInt();
-      for (int i = lastKey + 1; i <= note.toInt(); i++) {
-        piece.put(Note.intToNote(i), (Measure.newOffMeasure(Note.intToNote(i), numrows)));
-      }
+    for (int i = lastKey + 1; i <= note.toInt(); i++) {
+      piece.put(Note.intToNote(i), (Measure.newOffMeasure(Note.intToNote(i), numrows)));
     }
-    //System.out.println(getMusicState());
     IMeasure measure = piece.get(note);
     if (numrows < time) {
       for (int i = numrows; i < time; i++) {
