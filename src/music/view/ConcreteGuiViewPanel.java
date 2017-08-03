@@ -1,19 +1,15 @@
 package music.view;
 
 
-import java.awt.*;
+import music.model.*;
 
 import javax.swing.*;
-
-import music.model.Beat;
-import music.model.BeatType;
-import music.model.IBeat;
-import music.model.IRepeat;
-import music.model.ModelViewer;
+import java.awt.*;
 
 
 public class ConcreteGuiViewPanel extends JPanel {
   private ModelViewer model;
+  private IMeasure[] modelArray;
   private int tick;
 
   /**
@@ -23,16 +19,18 @@ public class ConcreteGuiViewPanel extends JPanel {
    */
   public ConcreteGuiViewPanel(ModelViewer model) {
     this.model = model;
+    this.modelArray = model.getPiece().values().toArray(new IMeasure[model.getPiece().size()]);
     this.tick = 0;
 
   }
+
 
   /**
    * Sets the tick of the gui to a specific time.
    *
    * @param t the tick
    */
-  public void setTick(long t) {
+  void setTick(long t) {
     this.tick = Math.toIntExact(t);
   }
 
@@ -42,8 +40,8 @@ public class ConcreteGuiViewPanel extends JPanel {
    * @param g the drawing tool
    */
   private void drawSideWords(Graphics g) {
-    for (int i = 0; i < model.getPiece().size(); i++) {
-      g.drawString(model.getPiece().get(i).getNote().toString(), 5, 33 +
+    for (int i = 0; i < modelArray.length; i++) {
+      g.drawString(modelArray[i].getNote().toString(), 5, 33 +
               (model.getPiece().size() - 1) * 20 - i * 20);
     }
     for (int i = 0; i < model.getNumRows(); i++) {
@@ -59,7 +57,7 @@ public class ConcreteGuiViewPanel extends JPanel {
    * @param g the drawing tool
    */
   private void drawBoxes(Graphics g) {
-    for (int i = 0; i < model.getPiece().size(); i++) {
+    for (int i = 0; i < modelArray.length; i++) {
       for (int k = 0; k < model.getNumRows(); k++) {
         if (k % 4 == 0) {
           g.setColor(Color.BLACK);
@@ -69,16 +67,16 @@ public class ConcreteGuiViewPanel extends JPanel {
         }
       }
     }
-    for (int i = 0; i < model.getPiece().size(); i++) {
+    for (int i = 0; i < modelArray.length; i++) {
       for (int k = 0; k < model.getNumRows(); k++) {
-        IBeat beat = model.getPiece().get(i).getBeats().get(k);
+        IBeat beat = modelArray[i].getBeats().get(k);
         if (beat.equals(new Beat(BeatType.Head))) {
           g.setColor(new Color(0, beat.getInstrument() * 15, 153));
-          g.fillRect(50 + k * 20, 19 + (model.getPiece().size() - 1) * 20 - i * 20, 20, 19);
+          g.fillRect(50 + k * 20, 19 + (modelArray.length - 1) * 20 - i * 20, 20, 19);
         }
         if (beat.equals(new Beat(BeatType.Sustain))) {
           g.setColor(new Color(178, (152 - beat.getInstrument() * 10), 255));
-          g.fillRect(50 + k * 20, 19 + (model.getPiece().size() - 1) * 20 - i * 20, 20, 19);
+          g.fillRect(50 + k * 20, 19 + (modelArray.length - 1) * 20 - i * 20, 20, 19);
         }
       }
     }

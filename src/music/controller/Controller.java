@@ -44,7 +44,8 @@ public class Controller {
    * Creates the controls that change parts of the model and then get reflected in the view.
    */
   private void modelKeys() {
-    IMeasure measure = model.getPiece().get(model.getPiece().size() - (mouse.getPos().y + 1));
+    INote currNote = Note.intToNote(model.getPiece().lastKey().toInt() - mouse.getPos().y);
+    IMeasure measure = model.getPiece().get(currNote);
     keyPressedMap.put(82, () -> {
       model.remove(measure.getNote(), measure.hashBeat().get(mouse.getPos().x));
     });

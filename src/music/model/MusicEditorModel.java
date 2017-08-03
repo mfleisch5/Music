@@ -8,8 +8,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public final class MusicEditorModel implements IMusicEditorModel {
   private final ConcurrentSkipListMap<INote, IMeasure> piece;
-  private int lowest;
-  private int highest;
   private int numrows;
   private final List<IRepeat> repeats;
 
@@ -124,13 +122,11 @@ public final class MusicEditorModel implements IMusicEditorModel {
     IMeasure last = piece.lastEntry().getValue();
     IMeasure first = piece.firstEntry().getValue();
     while (!last.getBeats().contains(new Beat(BeatType.Head))) {
-      last = piece.pollLastEntry().getValue();
+      piece.pollLastEntry();
     }
     while (!first.getBeats().contains(new Beat(BeatType.Head))) {
-      first = piece.pollFirstEntry().getValue();
+      piece.pollFirstEntry();
     }
-    lowest = first.getNote().toInt();
-    highest = last.getNote().toInt();
   }
 
   /**
@@ -163,21 +159,20 @@ public final class MusicEditorModel implements IMusicEditorModel {
     int sustain = time + duration;
     if (piece.size() == 0) {
       piece.put(note, (new Measure(note)));
-      lowest = note.toInt();
-      highest = note.toInt();
     }
-    if (note.toInt() < lowest) {
-      for (int i = 0; i < lowest - note.toInt(); i++) {
-        piece.put(note, Measure.newOffMeasure(Note.intToNote(i + note.toInt()), numrows));
+    if (note.toInt() < piece.firstKey().toInt()) {
+      int firstKey = piece.firstKey().toInt();
+      for (int i = note.toInt(); i < firstKey; i++) {
+        piece.put(Note.intToNote(i), Measure.newOffMeasure(Note.intToNote(i), numrows));
       }
-      lowest = note.toInt();
     }
-    if (note.toInt() > highest) {
-      for (int i = highest + 1; i <= note.toInt(); i++) {
-        piece.put(note, (Measure.newOffMeasure(Note.intToNote(i), numrows)));
+    if (note.toInt() > piece.lastKey().toInt()) {
+      int lastKey = piece.lastKey().toInt();
+      for (int i = lastKey + 1; i <= note.toInt(); i++) {
+        piece.put(Note.intToNote(i), (Measure.newOffMeasure(Note.intToNote(i), numrows)));
       }
-      highest = note.toInt();
     }
+    //System.out.println(getMusicState());
     IMeasure measure = piece.get(note);
     if (numrows < time) {
       for (int i = numrows; i < time; i++) {
