@@ -234,7 +234,7 @@ public class MidiViewImpl implements MidiView {
    * </a>
    */
   public void playSong(long start) throws InvalidMidiDataException {
-    for (IMeasure measure : model.getPiece()) {
+    for (IMeasure measure : model.getPiece().values()) {
       for (int i = 1; i <= measure.numBeats(); i++) {
         int beat = measure.findBeat(i);
         if ((beat * tempo) < start) {

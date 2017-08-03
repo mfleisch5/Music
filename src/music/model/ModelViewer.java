@@ -1,6 +1,7 @@
 package music.model;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * Created by michaelfleischmann on 12/5/16.
@@ -16,7 +17,7 @@ public interface ModelViewer {
    *
    * @return the piece
    */
-  List<IMeasure> getPiece();
+  ConcurrentSkipListMap<INote, IMeasure> getPiece();
 
   /**
    * returns the number of rows in the piece.

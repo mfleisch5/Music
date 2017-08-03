@@ -76,14 +76,12 @@ public class Controller {
       model.move(measure.getNote(), measure.hashBeat().get(mouse.getPos().x), Direction.Down, 1);
     });
     keyPressedMap.put(84, () -> {
-      model.getPiece().add(Measure.newOffMeasure(
-              Note.intToNote(1 + model.getPiece().get(model.getPiece().size() - 1).
-                      getNote().toInt()), model.getNumRows()));
+      INote newNote = Note.intToNote(model.getPiece().lastKey().toInt() + 1);
+      model.getPiece().put(newNote, Measure.newOffMeasure(newNote, model.getNumRows()));
     });
     keyPressedMap.put(71, () -> {
-      model.getPiece().add(0, Measure.newOffMeasure(
-              Note.intToNote(model.getPiece().get(0).getNote().toInt() - 1),
-              model.getNumRows()));
+      INote newNote = Note.intToNote(model.getPiece().firstKey().toInt() - 1);
+      model.getPiece().put(newNote, Measure.newOffMeasure(newNote, model.getNumRows()));
     });
     keyPressedMap.put(81, () -> {
       model.addRepeat(RepeatType.Start, mouse.getPos().x);

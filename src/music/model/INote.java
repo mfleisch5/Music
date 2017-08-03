@@ -3,7 +3,7 @@ package music.model;
 /**
  * Created by michaelfleischmann on 12/12/16.
  */
-public interface INote {
+public interface INote extends Comparable<INote> {
 
   /**
    * Returns the integer counterpart of the note.

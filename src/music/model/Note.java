@@ -66,4 +66,8 @@ public class Note implements INote {
     return Note.intToNote(i);
   }
 
+  @Override
+  public int compareTo(INote o) {
+    return Integer.compare(this.toInt(), o.toInt());
+  }
 }

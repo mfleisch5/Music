@@ -1,14 +1,13 @@
 package music.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * Created by michaelfleischmann on 10/15/16.
  */
 public final class MusicEditorModel implements IMusicEditorModel {
-  private final List<IMeasure> piece;
+  private final ConcurrentSkipListMap<INote, IMeasure> piece;
   private int lowest;
   private int highest;
   private int numrows;
@@ -19,7 +18,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    */
   public MusicEditorModel() {
     this.repeats = new ArrayList<>();
-    this.piece = new ArrayList<>();
+    this.piece = new ConcurrentSkipListMap<>();
     this.numrows = 0;
   }
 
@@ -35,7 +34,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     } else {
       result = String.format("%1$" + (String.valueOf(numrows).length() - 1) + "s", " ");
     }
-    for (IMeasure measure : piece) {
+    for (IMeasure measure : piece.values()) {
       result += measure.getNote().toString();
 
     }
@@ -49,7 +48,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    */
   private String getBeatState(int r) {
     String result = String.format("%1$" + String.valueOf(numrows).length() + "s", r);
-    for (IMeasure measure : piece) {
+    for (IMeasure measure : piece.values()) {
       result += measure.getBeats().get(r).toString();
     }
     return result;
@@ -69,7 +68,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
   }
 
   @Override
-  public List<IMeasure> getPiece() {
+  public ConcurrentSkipListMap<INote, IMeasure> getPiece() {
     return piece;
   }
 
@@ -87,21 +86,6 @@ public final class MusicEditorModel implements IMusicEditorModel {
   }
 
   /**
-   * Retrieves the specific measure that coincides with the note given.
-   *
-   * @param note the note of the measure wanted
-   * @return the measure in the piece
-   */
-  private IMeasure getMeasure(INote note) {
-    for (IMeasure measure : piece) {
-      if (measure.getNote().equals(note)) {
-        return measure;
-      }
-    }
-    throw new IllegalArgumentException("No such note");
-  }
-
-  /**
    * Keeps re-establishing the number of rows that the model has based on the last sustain
    * in the model.
    */
@@ -111,7 +95,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
       numrows = 0;
       return;
     }
-    for (IMeasure measure : piece) {
+    for (IMeasure measure : piece.values()) {
       int rowMax = Math.max(measure.getBeats().lastIndexOf(new Beat(BeatType.Sustain)),
               measure.getBeats().lastIndexOf(new Beat(BeatType.Head)));
       rows = Math.max(rowMax, rows);
@@ -126,7 +110,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
    */
   private void readjust() {
     findNumRows();
-    for (IMeasure measure : piece) {
+    for (IMeasure measure : piece.values()) {
       while (measure.getBeats().size() < numrows) {
         measure.getBeats().add(new Beat(BeatType.Rest));
       }
@@ -137,15 +121,13 @@ public final class MusicEditorModel implements IMusicEditorModel {
     if (piece.size() == 0) {
       return;
     }
-    IMeasure last = piece.get(piece.size() - 1);
-    IMeasure first = piece.get(0);
+    IMeasure last = piece.lastEntry().getValue();
+    IMeasure first = piece.firstEntry().getValue();
     while (!last.getBeats().contains(new Beat(BeatType.Head))) {
-      piece.remove(last);
-      last = piece.get(piece.size() - 1);
+      last = piece.pollLastEntry().getValue();
     }
     while (!first.getBeats().contains(new Beat(BeatType.Head))) {
-      piece.remove(first);
-      first = piece.get(0);
+      first = piece.pollFirstEntry().getValue();
     }
     lowest = first.getNote().toInt();
     highest = last.getNote().toInt();
@@ -162,9 +144,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     List<IRepeat> repeats = new ArrayList<>();
     repeats.addAll(this.repeats);
     repeats.add(repeat);
-    Collections.sort(repeats, (IRepeat o1, IRepeat o2) -> {
-      return o1.getLocation() - o2.getLocation();
-    });
+    Collections.sort(repeats, (Comparator.comparing(IRepeat::getLocation)));
     for (int i = 0; i < (repeats.size() - 1); i++) {
       if (repeats.get(i).getType() == RepeatType.Start) {
         result = result && ((repeats.get(i + 1).getType() == RepeatType.Play)
@@ -182,23 +162,23 @@ public final class MusicEditorModel implements IMusicEditorModel {
     }
     int sustain = time + duration;
     if (piece.size() == 0) {
-      piece.add(new Measure(note));
+      piece.put(note, (new Measure(note)));
       lowest = note.toInt();
       highest = note.toInt();
     }
     if (note.toInt() < lowest) {
       for (int i = 0; i < lowest - note.toInt(); i++) {
-        piece.add(i, Measure.newOffMeasure(Note.intToNote(i + note.toInt()), numrows));
+        piece.put(note, Measure.newOffMeasure(Note.intToNote(i + note.toInt()), numrows));
       }
       lowest = note.toInt();
     }
     if (note.toInt() > highest) {
       for (int i = highest + 1; i <= note.toInt(); i++) {
-        piece.add(Measure.newOffMeasure(Note.intToNote(i), numrows));
+        piece.put(note, (Measure.newOffMeasure(Note.intToNote(i), numrows)));
       }
       highest = note.toInt();
     }
-    IMeasure measure = getMeasure(note);
+    IMeasure measure = piece.get(note);
     if (numrows < time) {
       for (int i = numrows; i < time; i++) {
         measure.getBeats().add(new Beat(BeatType.Rest));
@@ -237,7 +217,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public void edit(INote note, int beat, int editlength) {
-    IMeasure measure = getMeasure(note);
+    IMeasure measure = piece.get(note);
     if (editlength > 0) {
       if (measure.unavailable(editlength, measure.getBeatEnd(beat) + 1)) {
         throw new IllegalArgumentException("Unavailable Space");
@@ -273,7 +253,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
 
   @Override
   public void remove(INote note, int beat) {
-    IMeasure measure = getMeasure(note);
+    IMeasure measure = piece.get(note);
     int actualbeat = measure.findBeat(beat);
     try {
       edit(note, beat, actualbeat - measure.getBeatEnd(beat));
@@ -290,7 +270,7 @@ public final class MusicEditorModel implements IMusicEditorModel {
     if (editlength < 0 || direction == null) {
       throw new IllegalArgumentException("Invalid Move Parameters");
     }
-    IMeasure measure = getMeasure(note);
+    IMeasure measure = piece.get(note);
     switch (direction) {
       case Right:
         if (measure.unavailable(editlength, measure.getBeatEnd(beat) + 1)) {

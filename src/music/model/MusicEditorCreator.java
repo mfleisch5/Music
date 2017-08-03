@@ -59,11 +59,11 @@ public class MusicEditorCreator {
     if (model1.getPiece().size() == 0) {
       model1rows = 0;
     } else {
-      model1rows = model1.getPiece().get(0).getBeats().size();
+      model1rows = model1.getPiece().firstEntry().getValue().getBeats().size();
     }
     switch (command) {
       case 'c':
-        for (IMeasure measure : model2.getPiece()) {
+        for (IMeasure measure : model2.getPiece().values()) {
           for (int i = 1; i <= measure.numBeats(); i++) {
             model1.addNote(measure.getNote(),
                     measure.getBeatEnd(i) - measure.findBeat(i),
@@ -72,7 +72,7 @@ public class MusicEditorCreator {
         }
         return model1;
       case 's':
-        for (IMeasure measure : model2.getPiece()) {
+        for (IMeasure measure : model2.getPiece().values()) {
           for (int i = 1; i <= measure.numBeats(); i++) {
             model1.addNote(measure.getNote(),
                     measure.getBeatEnd(i) - measure.findBeat(i),
